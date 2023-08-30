@@ -120,7 +120,11 @@ def init_on_device(device: torch.device, include_buffers: bool = None):
         if param is not None:
             param_cls = type(module._parameters[name])
             kwargs = module._parameters[name].__dict__
-            module._parameters[name] = param_cls(module._parameters[name].to(device), **kwargs)
+            # module._parameters[name] = param_cls(module._parameters[name].to(device), **kwargs)
+            module._parameters[name] = param_cls(module._parameters[name].to(device))
+            for k in kwargs:
+                setattr(module._parameters[name], k, kwargs[k])
+
 
     def register_empty_buffer(module, name, buffer, persistent=True):
         old_register_buffer(module, name, buffer, persistent=persistent)
